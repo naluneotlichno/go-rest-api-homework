@@ -73,6 +73,11 @@ func postTask(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	if _, ex := tasks[task.ID]; ex {        
+        http.Error(w, "Задача с таким ID уже существует", http.StatusConflict) 
+        return
+        }
+	
 	tasks[task.ID] = task
 
 	w.Header().Set("Content-Type", "application/json")
@@ -99,7 +104,7 @@ func getTaskForId(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("Ошибка записи: %v", err)
 	}
-	json.NewEncoder(w).Encode(task)
+	
 }
 
 // обработчик 4
